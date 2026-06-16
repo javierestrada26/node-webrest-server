@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ProductsController } from "./controller";
+import { ProductsController } from "./controller.js";
 
 export class ProductRoutes{
     static get routes():Router{

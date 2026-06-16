@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { TodoRoutes } from "./todos/routes";
-import { ProductRoutes } from "./products/routes";
+import { TodoRoutes } from "./todos/routes.js";
+import { ProductRoutes } from "./products/routes.js";
 
 
 

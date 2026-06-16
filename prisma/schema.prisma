@@ -8,6 +8,11 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+generator client_dist {
+  provider = "prisma-client-js"
+  output   = "../dist/generated/prisma"
+}
+
 datasource db {
   provider = "postgresql"
 }

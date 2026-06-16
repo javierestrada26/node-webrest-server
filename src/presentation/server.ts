@@ -1,5 +1,8 @@
 import express, { Router } from 'express';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 interface Options{
@@ -40,7 +43,7 @@ export class Server{
 
         //*SPA  
         this.app.get(/.*/,(req,res)=>{
-            const indexPath = path.join( __dirname + `../../../${this.publicPath}/index.html`)
+            const indexPath = path.join( __dirname, `../../${this.publicPath}/index.html`)
             res.sendFile(indexPath)
         })
         

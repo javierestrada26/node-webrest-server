@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { prisma } from "../../data/postgres"
+import { prisma } from "../../data/postgres/index.js"
 
 export class ProductsController{
     //*DI
