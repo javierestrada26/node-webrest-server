@@ -1,72 +1,80 @@
 import { Request,Response } from "express";
-
-const products=[
-    {id:1,name:'Camisetas', price:10,createAt: new Date()},
-    {id:2,name:'Buzos', price:30,createAt: new Date()},
-    {id:3,name:'Gorras', price:15,createAt: new Date()}
-]
-
+import { prisma } from "../../data/postgres"
 
 export class ProductsController{
     //*DI
     constructor(){}
 
-    public getProducts = (req:Request, resp:Response)=>{
-        return resp.json(products)
+    public getProducts = async (req:Request, resp:Response)=>{
+        const product =  await prisma.product.findMany()
+        return resp.json(product)
     };
 
-    public getProductsById = (req:Request, resp:Response)=>{
+    public getProductsById = async(req:Request, resp:Response)=>{
         const id = +(req.params.id as string);
         if(isNaN(id)) return resp.status(400).json({error: 'ID argument is not a number'})
-        const product = products.find(product =>product.id === id);
+        const product = await prisma.product.findFirst({
+            where:{id}
+        });
         (product)
         ? resp.json(product)
         : resp.status(404).json({error:`Product with id ${id} not found`})
     };
 
-    public createProduct = (req:Request, resp:Response)=>{
+    public createProduct = async (req:Request, resp:Response)=>{
         const {name, price} = req.body;
         if(!name) return resp.status(400).json({error:'Text property is required'})
         if(!price) return resp.status(400).json({error:'Price property is required'})
 
-        const newProduct ={
-            id:products.length + 1,
-            name: name,
-            price:price,
-            createAt: new Date()
-        }
-
-        products.push(newProduct);
-
-        resp.json(newProduct);
-    };
-
-
-    public updateProduct = (req:Request,resp:Response)=>{
-        const id = +(req.params.id as string);
-        if(isNaN(id)) return resp.status(400).json({error: 'ID argument is not a number'})
-
-        const product = products.find(product=>product.id ===id);
-        if(!product) return resp.status(404).json({error: `Product whit ID ${id} not found`});
-
-        const {name, price} = req.body
-
-        product.name = name || product.name;
-        product.price = price || product.price
-
+        const product = await prisma.product.create({
+            data:{
+                name:name,
+                price:price
+            }
+        })
         resp.json(product);
     };
 
 
-    public deleteProduct = (req:Request, resp:Response)=>{
+    public updateProduct = async (req:Request,resp:Response)=>{
         const id = +(req.params.id as string);
         if(isNaN(id)) return resp.status(400).json({error: 'ID argument is not a number'})
 
-        const product = products.find(product=>product.id ===id);
+        const product = await prisma.product.findFirst({
+            where:{id}
+        })
         if(!product) return resp.status(404).json({error: `Product whit ID ${id} not found`});
 
-        products.splice(products.indexOf(product),1);
-        resp.json(product)
+        const {name, price} = req.body
+
+        const updateProduct = await prisma.product.update({
+            where:{id},
+            data:{
+                name:name || product.name,
+                price:price || product.price
+            }
+        })
+
+        resp.json(updateProduct);
+    };
+
+
+    public deleteProduct = async(req:Request, resp:Response)=>{
+        const id = +(req.params.id as string);
+        if(isNaN(id)) return resp.status(400).json({error: 'ID argument is not a number'})
+
+        const product = await prisma.product.findFirst({
+            where:{id}
+        })
+        if(!product) return resp.status(404).json({error: `Product whit ID ${id} not found`});
+
+        const deleted =  await prisma.product.delete({
+            where:{id}
+        });
+
+        (deleted)
+         ? resp.json(deleted)
+         : resp.status(400).json({error:`Todo with id ${id} not found`})
     }
 
 
