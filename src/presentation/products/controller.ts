@@ -1,5 +1,7 @@
 import { Request,Response } from "express";
 import { prisma } from "../../data/postgres/index.js"
+import { CreateProductDto, UpdateProductDto } from "../../domain/dtos/index.js";
+
 
 export class ProductsController{
     //*DI
@@ -22,15 +24,11 @@ export class ProductsController{
     };
 
     public createProduct = async (req:Request, resp:Response)=>{
-        const {name, price} = req.body;
-        if(!name) return resp.status(400).json({error:'Text property is required'})
-        if(!price) return resp.status(400).json({error:'Price property is required'})
+        const [error,createProductDto] = CreateProductDto.create(req.body);
+        if(error) return resp.status(400).json({error});
 
         const product = await prisma.product.create({
-            data:{
-                name:name,
-                price:price
-            }
+            data:createProductDto!
         })
         resp.json(product);
     };
@@ -38,22 +36,21 @@ export class ProductsController{
 
     public updateProduct = async (req:Request,resp:Response)=>{
         const id = +(req.params.id as string);
-        if(isNaN(id)) return resp.status(400).json({error: 'ID argument is not a number'})
+
+        const [error, updateProductDto] = UpdateProductDto.create({
+             ...req.body, id
+        });
+        if(error) return resp.status(400).json({error})
 
         const product = await prisma.product.findFirst({
             where:{id}
         })
         if(!product) return resp.status(404).json({error: `Product whit ID ${id} not found`});
 
-        const {name, price} = req.body
-
-        const updateProduct = await prisma.product.update({
+        const updateProduct =  await prisma.product.update({
             where:{id},
-            data:{
-                name:name || product.name,
-                price:price || product.price
-            }
-        })
+            data:updateProductDto!.values
+        });
 
         resp.json(updateProduct);
     };
