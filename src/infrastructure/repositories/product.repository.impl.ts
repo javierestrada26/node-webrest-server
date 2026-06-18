@@ -1,4 +1,4 @@
-import { CreateProductDto, ProductDataSource, ProductEntity, ProductRepository, UpdateProductDto } from "../../domain";
+import { CreateProductDto, ProductDataSource, ProductEntity, ProductRepository, UpdateProductDto } from "../../domain/index.js";
 
 
 export class ProductRepositoryImpl implements ProductRepository{
