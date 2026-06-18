@@ -1,5 +1,5 @@
 import { prisma } from "../../data/postgres/index.js"
-import { CreateTodoDto, TodoDataSource, TodoEntity, UpdateTodoDto } from "../../domain";
+import { CreateTodoDto, TodoDataSource, TodoEntity, UpdateTodoDto } from "../../domain/index.js";
 
 
 
