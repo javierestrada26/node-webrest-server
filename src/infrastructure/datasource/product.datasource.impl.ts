@@ -1,4 +1,4 @@
-import { prisma } from "../../data/postgres";
+import { prisma } from "../../data/postgres/index.js";
 import { CreateProductDto, ProductDataSource, ProductEntity, UpdateProductDto } from "../../domain";
 
 
