@@ -17,7 +17,7 @@ Servidor REST construido con Node.js, Express y TypeScript, con PostgreSQL como 
 
 ## 📐 Arquitectura
 
-El proyecto aplica **Clean Architecture** para el módulo de Todos y un enfoque directo para Productos, con el objetivo de contrastar ambos estilos. La parte de Products es practica así que se ira migrando a Clean Architecture progresivamente.
+El proyecto aplica **Clean Architecture** para el módulo de Todos y Productos.
 
 ```
 src/
